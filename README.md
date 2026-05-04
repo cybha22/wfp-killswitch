@@ -1,4 +1,4 @@
-# Advanced VPN Kill Switch for Windows
+# Advanced PROTON VPN Kill Switch for Windows
 
 A production-grade, OS-level VPN kill switch built in Go that provides fail-closed network protection using the Windows Filtering Platform (WFP). Designed to be stronger than ProtonVPN's built-in kill switch.
 
