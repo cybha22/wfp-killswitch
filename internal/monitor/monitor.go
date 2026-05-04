@@ -126,5 +126,10 @@ func (m *Monitor) checkVPNStatus() {
 		return
 	}
 
+	if !IsDefaultRouteViaVPN(iface.Index) {
+		m.setState(VPNStateDown)
+		return
+	}
+
 	m.setState(VPNStateUp)
 }

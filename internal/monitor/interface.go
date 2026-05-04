@@ -73,3 +73,19 @@ func GetInterfaceLUID(ifaceIndex int) uint64 {
 	}
 	return luid
 }
+
+func IsDefaultRouteViaVPN(vpnIfaceIndex int) bool {
+	routes, err := getRouteTable()
+	if err != nil {
+		return false
+	}
+
+	for _, route := range routes {
+		isDefaultRoute := route.ForwardDest == 0 && route.ForwardMask == 0
+		if isDefaultRoute && int(route.ForwardIfIndex) == vpnIfaceIndex {
+			return true
+		}
+	}
+
+	return false
+}
