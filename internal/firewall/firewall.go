@@ -143,9 +143,12 @@ func (c *Controller) Lock() error {
 	return nil
 }
 
-// State returns the current firewall state.
-func (c *Controller) State() State {
+func (c *Controller) CurrentState() State {
 	return c.state
+}
+
+func (c *Controller) Session() *WFPSession {
+	return c.session
 }
 
 // Shutdown closes the WFP session.

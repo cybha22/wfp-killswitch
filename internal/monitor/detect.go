@@ -51,7 +51,8 @@ func DetectVPNServerIPs(vpnInterfaceIndex int) ([]netip.Addr, error) {
 
 		if isHostRoute && notViaVPN && notLoopback && notDefaultRoute {
 			ip := uint32ToIP(route.ForwardDest)
-			if !ip.IsPrivate() && !ip.IsLoopback() && !ip.IsMulticast() && !ip.IsLinkLocalUnicast() {
+			isBroadcast := ip == netip.AddrFrom4([4]byte{255, 255, 255, 255})
+			if !ip.IsPrivate() && !ip.IsLoopback() && !ip.IsMulticast() && !ip.IsLinkLocalUnicast() && !isBroadcast {
 				serverIPs = append(serverIPs, ip)
 			}
 		}

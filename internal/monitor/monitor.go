@@ -55,6 +55,8 @@ func (m *Monitor) Start(ctx context.Context) error {
 	ctx, cancel := context.WithCancel(ctx)
 	m.cancelFn = cancel
 
+	m.checkVPNStatus()
+
 	if m.cfg.Monitor.EventDriven {
 		go m.runEventLoop(ctx)
 	}

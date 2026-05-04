@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	"github.com/muhsh/advanced-killswitch/internal/config"
+	"github.com/muhsh/advanced-killswitch/internal/dns"
 	"github.com/muhsh/advanced-killswitch/internal/firewall"
 	"github.com/muhsh/advanced-killswitch/internal/logger"
 	"github.com/muhsh/advanced-killswitch/internal/monitor"
@@ -16,8 +17,9 @@ import (
 )
 
 type Service struct {
-	cfg *config.Config
-	log *logger.Logger
+	cfg         *config.Config
+	log         *logger.Logger
+	isDebugMode bool
 }
 
 func New(cfg *config.Config, log *logger.Logger) *Service {
@@ -39,6 +41,7 @@ func (s *Service) Run() error {
 
 func (s *Service) RunInteractive() error {
 	s.log.Info("running in interactive/debug mode")
+	s.isDebugMode = true
 	ctx, cancel := context.WithCancel(context.Background())
 
 	sigCh := make(chan os.Signal, 1)
@@ -59,6 +62,16 @@ func (s *Service) runCore(ctx context.Context) error {
 		return fmt.Errorf("firewall init: %w", err)
 	}
 
+	var dnsGuard *dns.Guard
+	if s.cfg.Firewall.DNSLeakProtection && fw.Session() != nil {
+		dnsGuard = dns.NewGuard(s.cfg, s.log, fw.Session().RawSession())
+		if err := dnsGuard.Enable(); err != nil {
+			s.log.Warnf("DNS guard enable failed: %v", err)
+		} else {
+			s.log.Info("DNS leak protection active")
+		}
+	}
+
 	engine := policy.NewEngine(s.cfg, s.log, fw)
 
 	mon := monitor.New(s.cfg, s.log, engine.HandleVPNStateChange)
@@ -72,7 +85,13 @@ func (s *Service) runCore(ctx context.Context) error {
 	s.log.Info("shutting down...")
 	mon.Stop()
 
-	keepPersistent := s.cfg.Firewall.BootTimeProtection
+	if dnsGuard != nil {
+		if err := dnsGuard.Disable(); err != nil {
+			s.log.Warnf("DNS guard disable failed: %v", err)
+		}
+	}
+
+	keepPersistent := s.cfg.Firewall.BootTimeProtection && !s.isDebugMode
 	if err := fw.Shutdown(keepPersistent); err != nil {
 		s.log.Errorf("firewall shutdown error: %v", err)
 	}

@@ -25,14 +25,13 @@ func mustGUID(s string) windows.GUID {
 	return g
 }
 
-// WFPSession wraps a WFP engine session for managing firewall rules.
 type WFPSession struct {
 	cfg     *config.Config
 	log     *logger.Logger
 	session *wf.Session
 
-	// Track dynamic rule IDs for cleanup
 	vpnPermitRuleIDs []wf.RuleID
+	persistentMgr    *PersistentManager
 }
 
 // NewWFPSession opens a dynamic WFP session.
@@ -137,26 +136,29 @@ func (ws *WFPSession) RemoveVPNPermit() error {
 	return nil
 }
 
-// InstallPersistentFilters creates boot-time block-all filters
-// that survive service restarts and reboots.
 func (ws *WFPSession) InstallPersistentFilters() error {
 	ws.log.Info("installing persistent boot-time filters")
-	// TODO: Implement persistent (non-dynamic) WFP session for boot-time filters.
-	// This requires a separate non-dynamic session with FWPM_FILTER_FLAG_PERSISTENT
-	// and FWPM_FILTER_FLAG_BOOTTIME flags.
-	// For now, the dynamic session provides protection while the service is running.
-	ws.log.Warn("persistent boot-time filters not yet implemented - using dynamic session only")
+	pm := NewPersistentManager()
+	if err := pm.Install(); err != nil {
+		return fmt.Errorf("persistent filters: %w", err)
+	}
+	ws.persistentMgr = pm
+	ws.log.Info("persistent boot-time filters installed")
 	return nil
 }
 
-// RemovePersistentFilters removes boot-time filters.
 func (ws *WFPSession) RemovePersistentFilters() error {
+	if ws.persistentMgr == nil {
+		return nil
+	}
 	ws.log.Info("removing persistent boot-time filters")
-	// TODO: Remove persistent filters from the non-dynamic session.
-	return nil
+	return ws.persistentMgr.Remove()
 }
 
-// Close closes the WFP session, removing all dynamic rules.
+func (ws *WFPSession) RawSession() *wf.Session {
+	return ws.session
+}
+
 func (ws *WFPSession) Close() error {
 	if ws.session != nil {
 		return ws.session.Close()

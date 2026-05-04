@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/muhsh/advanced-killswitch/internal/config"
+	"github.com/muhsh/advanced-killswitch/internal/dns"
 	"github.com/muhsh/advanced-killswitch/internal/firewall"
 	"github.com/muhsh/advanced-killswitch/internal/logger"
 	"github.com/muhsh/advanced-killswitch/internal/monitor"
@@ -113,6 +114,10 @@ func (e *Engine) transitionToLocked() {
 		e.log.Errorf("failed to lock firewall: %v", err)
 		e.state = StateError
 		return
+	}
+
+	if err := dns.FlushDNSCache(); err != nil {
+		e.log.Debugf("DNS cache flush: %v", err)
 	}
 
 	e.state = StateLocked

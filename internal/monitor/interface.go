@@ -57,7 +57,8 @@ func HasValidVPNIP(iface *VPNInterface, vpnIPRange string) bool {
 	}
 
 	for _, addr := range iface.Addresses {
-		if prefix.Contains(addr) {
+		a := addr.Unmap()
+		if prefix.Contains(a) {
 			return true
 		}
 	}
@@ -66,8 +67,9 @@ func HasValidVPNIP(iface *VPNInterface, vpnIPRange string) bool {
 }
 
 func GetInterfaceLUID(ifaceIndex int) uint64 {
-	// TODO: Use ConvertInterfaceIndexToLuid from iphlpapi.dll
-	// For now, return the index as a placeholder.
-	// The actual LUID is needed for WFP rules.
-	return uint64(ifaceIndex)
+	luid, err := DetectVPNInterfaceLUID(ifaceIndex)
+	if err != nil {
+		return uint64(ifaceIndex)
+	}
+	return luid
 }
