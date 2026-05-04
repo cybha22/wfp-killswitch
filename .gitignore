@@ -44,3 +44,4 @@ vendor/
 # Debug output
 debug_*.txt
 *.log.txt
+terminallogs.txt
