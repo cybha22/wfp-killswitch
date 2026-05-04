@@ -77,6 +77,27 @@ All commands require an elevated (Administrator) PowerShell or Command Prompt.
 .\killswitch.exe debug
 ```
 
+## Windows Service Behavior
+
+Once installed, the kill switch runs as a Windows Service called `AdvancedKillSwitch`:
+
+| Event | What Happens |
+|-------|-------------|
+| PC shutdown and restart | Service auto-starts on boot, blocks traffic until VPN connects |
+| VPN disconnects | All traffic blocked immediately |
+| VPN reconnects | Traffic restored automatically |
+| VPN switches server | New server IP auto-detected, rules updated |
+| Service crash | Windows auto-restarts it (0s delay recovery) |
+| `.\killswitch.exe stop` | Service stops, all WFP rules removed, internet restored |
+| `.\killswitch.exe uninstall` | Service removed permanently, all filters cleaned |
+
+The service depends on BFE (Base Filtering Engine) and starts automatically after Windows boot. You can also manage it via `services.msc` (look for "Advanced VPN Kill Switch").
+
+To check logs:
+```powershell
+Get-Content "C:\ProgramData\AdvancedKillSwitch\logs\killswitch.log" -Tail 30
+```
+
 ## Configuration
 
 Configuration file: `configs/config.yaml`

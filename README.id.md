@@ -77,6 +77,27 @@ Semua command memerlukan PowerShell atau Command Prompt yang di-elevate (Adminis
 .\killswitch.exe debug
 ```
 
+## Perilaku Windows Service
+
+Setelah diinstall, kill switch berjalan sebagai Windows Service bernama `AdvancedKillSwitch`:
+
+| Kejadian | Yang Terjadi |
+|----------|-------------|
+| PC shutdown dan nyala lagi | Service otomatis start saat boot, blokir traffic sampai VPN connect |
+| VPN disconnect | Semua traffic langsung diblokir |
+| VPN reconnect | Traffic dipulihkan otomatis |
+| VPN ganti server | IP server baru terdeteksi otomatis, rules diperbarui |
+| Service crash | Windows otomatis restart service (delay 0 detik) |
+| `.\killswitch.exe stop` | Service berhenti, semua WFP rules dihapus, internet kembali |
+| `.\killswitch.exe uninstall` | Service dihapus permanen, semua filter dibersihkan |
+
+Service bergantung pada BFE (Base Filtering Engine) dan start otomatis setelah Windows boot. Bisa juga dikelola via `services.msc` (cari "Advanced VPN Kill Switch").
+
+Untuk cek log:
+```powershell
+Get-Content "C:\ProgramData\AdvancedKillSwitch\logs\killswitch.log" -Tail 30
+```
+
 ## Konfigurasi
 
 File konfigurasi: `configs/config.yaml`
