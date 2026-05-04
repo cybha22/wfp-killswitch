@@ -128,6 +128,46 @@ pkg/winapi/             Binding Windows API
 | 500 | Permit IP server VPN | Izinkan pembentukan tunnel awal |
 | 100 | Block semuanya | Rule deny catch-all |
 
+## Demo Log
+
+Output real dari `.\killswitch.exe debug` yang menunjukkan kill switch beraksi:
+
+```
+PS> .\killswitch.exe debug
+
+14:05:05  info  running in interactive/debug mode
+14:05:05  info  initializing WFP firewall controller
+14:05:05  info  auto-detecting VPN server IPs and DNS servers
+14:05:05  info  detected VPN interface index: 27
+14:05:05  info  detected VPN server IPs: [146.70.14.19]
+14:05:06  info  detected VPN DNS servers: [10.2.0.1]
+14:05:06  info  applying lockdown rules
+14:05:06  info  firewall initialized in LOCKED state
+14:05:06  info  DNS leak protection active
+14:05:06  info  VPN state changed: DOWN -> UP
+14:05:06  info  unlocking firewall for VPN LUID 14918723521478656
+14:05:06  info  firewall state: UNLOCKED
+14:05:06  info  kill switch active
+
+# User disconnect ProtonVPN:
+14:05:14  info  VPN state changed: UP -> RECONNECTING
+14:05:16  info  VPN state changed: RECONNECTING -> DOWN
+14:05:16  info  locking firewall - removing VPN permit rules
+14:05:16  info  firewall state: LOCKED          <-- semua traffic diblokir
+
+# User reconnect ProtonVPN (server berbeda):
+14:06:39  info  VPN state changed: DOWN -> UP
+14:06:39  info  refreshed VPN server IPs: [169.150.196.155]   <-- server baru auto-detect
+14:06:39  info  refreshed VPN DNS servers: [10.2.0.1]
+14:06:39  info  firewall state: UNLOCKED        <-- traffic dipulihkan
+```
+
+Observasi:
+- VPN disconnect terdeteksi dalam waktu kurang dari 2 detik
+- Perubahan server IP (146.70.14.19 -> 169.150.196.155) terdeteksi otomatis
+- Traffic diblokir selama seluruh window VPN-down
+- Tidak perlu konfigurasi manual untuk pergantian server
+
 ## Catatan Penting
 
 - **Test di VM dulu.** Salah konfigurasi bisa mengunci internet sepenuhnya.

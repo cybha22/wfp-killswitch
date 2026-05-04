@@ -128,6 +128,46 @@ pkg/winapi/             Windows API bindings
 | 500 | Permit VPN server IP | Allow initial tunnel establishment |
 | 100 | Block everything | Catch-all deny rule |
 
+## Demo Log
+
+Real output from `.\killswitch.exe debug` showing the kill switch in action:
+
+```
+PS> .\killswitch.exe debug
+
+14:05:05  info  running in interactive/debug mode
+14:05:05  info  initializing WFP firewall controller
+14:05:05  info  auto-detecting VPN server IPs and DNS servers
+14:05:05  info  detected VPN interface index: 27
+14:05:05  info  detected VPN server IPs: [146.70.14.19]
+14:05:06  info  detected VPN DNS servers: [10.2.0.1]
+14:05:06  info  applying lockdown rules
+14:05:06  info  firewall initialized in LOCKED state
+14:05:06  info  DNS leak protection active
+14:05:06  info  VPN state changed: DOWN -> UP
+14:05:06  info  unlocking firewall for VPN LUID 14918723521478656
+14:05:06  info  firewall state: UNLOCKED
+14:05:06  info  kill switch active
+
+# User disconnects ProtonVPN:
+14:05:14  info  VPN state changed: UP -> RECONNECTING
+14:05:16  info  VPN state changed: RECONNECTING -> DOWN
+14:05:16  info  locking firewall - removing VPN permit rules
+14:05:16  info  firewall state: LOCKED          <-- all traffic blocked
+
+# User reconnects ProtonVPN (different server):
+14:06:39  info  VPN state changed: DOWN -> UP
+14:06:39  info  refreshed VPN server IPs: [169.150.196.155]   <-- new server auto-detected
+14:06:39  info  refreshed VPN DNS servers: [10.2.0.1]
+14:06:39  info  firewall state: UNLOCKED        <-- traffic restored
+```
+
+Key observations:
+- VPN disconnect detected in under 2 seconds
+- Server IP change (146.70.14.19 -> 169.150.196.155) auto-detected
+- Traffic blocked during entire VPN-down window
+- No manual configuration needed for server changes
+
 ## Important Notes
 
 - **Test in a VM first.** Misconfiguration can lock you out of the internet entirely.

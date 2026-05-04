@@ -1,0 +1,58 @@
+PS C:\Users\muhsh\OneDrive\Desktop\advanced-KS-protonvpn> .\killswitch.exe debug
+>>
+2026-05-04T14:05:05.534+0700    info    service/windows.go:44   running in interactive/debug mode
+2026-05-04T14:05:05.534+0700    info    firewall/firewall.go:51 initializing WFP firewall controller
+2026-05-04T14:05:05.535+0700    info    firewall/firewall.go:54 auto-detecting VPN server IPs and DNS servers
+2026-05-04T14:05:05.539+0700    info    firewall/firewall.go:87 detected VPN interface index: 27
+2026-05-04T14:05:05.539+0700    info    firewall/firewall.go:95 detected VPN server IPs: [146.70.14.19]
+2026-05-04T14:05:06.224+0700    info    firewall/firewall.go:104        detected VPN DNS servers: [10.2.0.1]
+2026-05-04T14:05:06.227+0700    info    firewall/wfp.go:99      applying lockdown rules
+2026-05-04T14:05:06.232+0700    info    firewall/firewall.go:75 firewall initialized in LOCKED state
+2026-05-04T14:05:06.232+0700    info    dns/guard.go:32 enabling DNS leak protection
+2026-05-04T14:05:06.232+0700    info    dns/nrpt.go:10  skipping NRPT - using WFP DNS rules only (NRPT breaks some browsers)
+2026-05-04T14:05:06.232+0700    info    service/windows.go:72   DNS leak protection active
+2026-05-04T14:05:06.237+0700    info    monitor/monitor.go:91   VPN state changed: DOWN -> UP
+2026-05-04T14:05:06.241+0700    info    policy/engine.go:94     refreshed VPN server IPs: [146.70.14.19]
+2026-05-04T14:05:06.900+0700    info    policy/engine.go:104    refreshed VPN DNS servers: [10.2.0.1]
+2026-05-04T14:05:06.900+0700    info    firewall/firewall.go:116        unlocking firewall for VPN LUID 14918723521478656
+2026-05-04T14:05:06.901+0700    info    firewall/wfp.go:114     applying VPN permit rules for LUID 14918723521478656
+2026-05-04T14:05:06.901+0700    info    firewall/firewall.go:123        firewall state: UNLOCKED
+2026-05-04T14:05:06.902+0700    info    policy/engine.go:83     policy engine: UNLOCKED
+2026-05-04T14:05:06.902+0700    info    monitor/monitor.go:67   network monitor started
+2026-05-04T14:05:06.902+0700    info    service/windows.go:83   kill switch active
+2026-05-04T14:05:06.902+0700    info    monitor/events.go:17    starting event-driven network monitor (NotifyAddrChange)
+2026-05-04T14:05:14.494+0700    info    monitor/monitor.go:91   VPN state changed: UP -> RECONNECTING
+2026-05-04T14:05:16.905+0700    info    monitor/monitor.go:91   VPN state changed: RECONNECTING -> DOWN
+2026-05-04T14:05:16.905+0700    info    firewall/firewall.go:133        locking firewall - removing VPN permit rules
+2026-05-04T14:05:16.906+0700    info    firewall/firewall.go:140        firewall state: LOCKED
+2026-05-04T14:05:16.918+0700    info    policy/engine.go:125    policy engine: LOCKED
+2026-05-04T14:05:45.524+0700    info    monitor/monitor.go:91   VPN state changed: DOWN -> UP
+2026-05-04T14:05:51.904+0700    info    monitor/monitor.go:91   VPN state changed: UP -> DOWN
+2026-05-04T14:06:05.701+0700    info    policy/engine.go:94     refreshed VPN server IPs: [146.70.14.19]
+2026-05-04T14:06:06.424+0700    info    policy/engine.go:104    refreshed VPN DNS servers: [10.2.0.1]
+2026-05-04T14:06:06.424+0700    info    firewall/firewall.go:116        unlocking firewall for VPN LUID 14918723521478656
+2026-05-04T14:06:06.425+0700    info    firewall/wfp.go:114     applying VPN permit rules for LUID 14918723521478656
+2026-05-04T14:06:06.426+0700    info    firewall/firewall.go:123        firewall state: UNLOCKED
+2026-05-04T14:06:06.426+0700    info    policy/engine.go:83     policy engine: UNLOCKED
+2026-05-04T14:06:06.426+0700    info    firewall/firewall.go:133        locking firewall - removing VPN permit rules
+2026-05-04T14:06:06.426+0700    info    firewall/firewall.go:140        firewall state: LOCKED
+2026-05-04T14:06:06.436+0700    info    policy/engine.go:125    policy engine: LOCKED
+2026-05-04T14:06:06.440+0700    info    monitor/monitor.go:91   VPN state changed: DOWN -> UP
+2026-05-04T14:06:06.445+0700    info    policy/engine.go:94     refreshed VPN server IPs: [146.70.14.19]
+2026-05-04T14:06:07.188+0700    info    policy/engine.go:104    refreshed VPN DNS servers: [10.2.0.1]
+2026-05-04T14:06:07.188+0700    info    firewall/firewall.go:116        unlocking firewall for VPN LUID 14918723521478656
+2026-05-04T14:06:07.188+0700    info    firewall/wfp.go:114     applying VPN permit rules for LUID 14918723521478656
+2026-05-04T14:06:07.189+0700    info    firewall/firewall.go:123        firewall state: UNLOCKED
+2026-05-04T14:06:07.189+0700    info    policy/engine.go:83     policy engine: UNLOCKED
+2026-05-04T14:06:30.916+0700    info    monitor/monitor.go:91   VPN state changed: UP -> RECONNECTING
+2026-05-04T14:06:31.905+0700    info    monitor/monitor.go:91   VPN state changed: RECONNECTING -> DOWN
+2026-05-04T14:06:31.905+0700    info    firewall/firewall.go:133        locking firewall - removing VPN permit rules
+2026-05-04T14:06:31.906+0700    info    firewall/firewall.go:140        firewall state: LOCKED
+2026-05-04T14:06:31.914+0700    info    policy/engine.go:125    policy engine: LOCKED
+2026-05-04T14:06:39.097+0700    info    monitor/monitor.go:91   VPN state changed: DOWN -> UP
+2026-05-04T14:06:39.108+0700    info    policy/engine.go:94     refreshed VPN server IPs: [169.150.196.155]
+2026-05-04T14:06:39.917+0700    info    policy/engine.go:104    refreshed VPN DNS servers: [10.2.0.1]
+2026-05-04T14:06:39.917+0700    info    firewall/firewall.go:116        unlocking firewall for VPN LUID 14918723521478656
+2026-05-04T14:06:39.918+0700    info    firewall/wfp.go:114     applying VPN permit rules for LUID 14918723521478656
+2026-05-04T14:06:39.919+0700    info    firewall/firewall.go:123        firewall state: UNLOCKED
+2026-05-04T14:06:39.919+0700    info    policy/engine.go:83     policy engine: UNLOCKED
