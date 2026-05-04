@@ -1,0 +1,42 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Build output
+/killswitch
+/killswitch.exe
+
+# Test binary
+*.test
+
+# Go coverage
+*.out
+coverage.html
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Internal planning docs (not for public)
+plan.md
+
+# Logs
+*.log
+logs/
+
+# Local config overrides
+configs/config.local.yaml
+
+# Dependency cache
+vendor/

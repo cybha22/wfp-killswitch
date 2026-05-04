@@ -1,0 +1,7 @@
+package winapi
+
+const (
+	FWP_CONDITION_FLAG_IS_LOOPBACK uint32 = 0x00000001
+
+	ERROR_IO_PENDING = 997
+)

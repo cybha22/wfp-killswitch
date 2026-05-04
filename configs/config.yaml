@@ -1,0 +1,40 @@
+vpn:
+  adapter_name: "ProtonVPN"
+  adapter_description: "WireGuard Tunnel"
+  auto_detect: true
+  # server_ips dan dns_servers di-detect otomatis dari route table & interface
+  # Hanya perlu diisi manual jika auto_detect: false
+  # server_ips:
+  #   - "103.120.66.226"
+  # dns_servers:
+  #   - "10.2.0.1"
+  process_paths:
+    - "C:\\Program Files\\Proton\\VPN\\v4.3.14\\ProtonVPN.Client.exe"
+    - "C:\\Program Files\\Proton\\VPN\\v4.3.14\\ProtonVPNService.exe"
+    - "C:\\Program Files\\Proton\\VPN\\v4.3.14\\ProtonVPN.WireGuardService.exe"
+
+firewall:
+  mode: "strict"
+  block_ipv6: true
+  dns_leak_protection: true
+  boot_time_protection: true
+  allow_lan: false
+  allow_dhcp: true
+  allow_loopback: true
+
+monitor:
+  event_driven: true
+  backup_poll_interval: "5s"
+  vpn_ip_range: "10.0.0.0/8"
+
+service:
+  name: "AdvancedKillSwitch"
+  display_name: "Advanced VPN Kill Switch"
+  description: "OS-level VPN kill switch with WFP enforcement"
+  auto_start: true
+
+logging:
+  level: "info"
+  file: "C:\\ProgramData\\AdvancedKillSwitch\\logs\\killswitch.log"
+  max_size_mb: 10
+  max_backups: 3
