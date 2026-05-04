@@ -135,9 +135,10 @@ func (e *Engine) handleReconnecting() {
 		defer e.mu.Unlock()
 		e.debounceTimer = nil
 
-		if e.state != StateUnlocked {
-			e.transitionToLocked()
+		if e.state == StateUnlocked || e.state == StateLocked {
+			return
 		}
+		e.transitionToLocked()
 	})
 }
 

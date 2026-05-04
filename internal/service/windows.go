@@ -13,6 +13,7 @@ import (
 	"github.com/muhsh/advanced-killswitch/internal/logger"
 	"github.com/muhsh/advanced-killswitch/internal/monitor"
 	"github.com/muhsh/advanced-killswitch/internal/policy"
+	"golang.org/x/sys/windows/registry"
 	"golang.org/x/sys/windows/svc"
 )
 
@@ -102,8 +103,10 @@ func (s *Service) runCore(ctx context.Context) error {
 func (s *Service) ForceCleanup() {
 	pm := firewall.NewPersistentManager()
 	_ = pm.Remove()
-
 	s.log.Info("removed persistent WFP filters")
+
+	_ = registry.DeleteKey(registry.LOCAL_MACHINE, `SOFTWARE\Policies\Microsoft\Windows NT\DNSClient\DnsPolicyConfig\AdvancedKillSwitch`)
+	s.log.Info("removed NRPT rules")
 
 	dns.FlushDNSCache()
 	s.log.Info("flushed DNS cache")
