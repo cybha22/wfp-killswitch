@@ -63,11 +63,9 @@ func (c *Controller) Initialize() error {
 	}
 	c.session = session
 
-	if c.cfg.Firewall.BootTimeProtection {
-		if err := c.session.InstallPersistentFilters(); err != nil {
-			c.log.Warnf("failed to install persistent filters: %v", err)
-		}
-	}
+	// Persistent filters disabled for now - dynamic session is sufficient.
+	// When service runs: rules active. When service stops: rules gone = internet restored.
+	// Boot-time protection requires kernel-level driver (future enhancement).
 
 	if err := c.session.ApplyLockdown(); err != nil {
 		return err

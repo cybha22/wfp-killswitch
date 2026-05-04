@@ -136,20 +136,18 @@ func BuildLockdownRules(cfg *config.Config, sublayer wf.SublayerID) []*wf.Rule {
 	return rules
 }
 
-// BuildVPNPermitRules creates rules to permit traffic on the VPN interface.
 func BuildVPNPermitRules(vpnLUID uint64, sublayer wf.SublayerID) []*wf.Rule {
 	layers := []wf.LayerID{
 		wf.LayerALEAuthConnectV4,
 		wf.LayerALEAuthRecvAcceptV4,
-		wf.LayerALEAuthConnectV6,
-		wf.LayerALEAuthRecvAcceptV6,
 	}
 
 	var rules []*wf.Rule
+
 	for _, layer := range layers {
 		rules = append(rules, &wf.Rule{
 			ID:       newRuleID(),
-			Name:     fmt.Sprintf("Allow VPN Interface - %s", layer),
+			Name:     fmt.Sprintf("Permit All (VPN Active) - %s", layer),
 			Layer:    layer,
 			Sublayer: sublayer,
 			Weight:   1000,
@@ -161,6 +159,15 @@ func BuildVPNPermitRules(vpnLUID uint64, sublayer wf.SublayerID) []*wf.Rule {
 				},
 			},
 			Action: wf.ActionPermit,
+		})
+
+		rules = append(rules, &wf.Rule{
+			ID:       newRuleID(),
+			Name:     fmt.Sprintf("Permit Outbound to VPN (Active) - %s", layer),
+			Layer:    layer,
+			Sublayer: sublayer,
+			Weight:   999,
+			Action:   wf.ActionPermit,
 		})
 	}
 

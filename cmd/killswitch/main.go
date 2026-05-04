@@ -72,10 +72,14 @@ func main() {
 		}
 
 	case "debug":
-		// Run in foreground for debugging
 		if err := svc.RunInteractive(); err != nil {
 			log.Fatalf("debug run failed: %v", err)
 		}
+
+	case "cleanup":
+		fmt.Println("Removing all WFP filters and NRPT rules...")
+		svc.ForceCleanup()
+		fmt.Println("Cleanup complete. Internet should be restored.")
 
 	default:
 		fmt.Fprintf(os.Stderr, "unknown command: %s\n", cmd)
@@ -97,4 +101,5 @@ func printUsage() {
 	fmt.Println("  status     Show service status")
 	fmt.Println("  run        Run as Windows service (called by SCM)")
 	fmt.Println("  debug      Run in foreground for debugging")
+	fmt.Println("  cleanup    Remove all WFP filters and restore internet")
 }

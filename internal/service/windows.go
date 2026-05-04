@@ -99,6 +99,16 @@ func (s *Service) runCore(ctx context.Context) error {
 	return nil
 }
 
+func (s *Service) ForceCleanup() {
+	pm := firewall.NewPersistentManager()
+	_ = pm.Remove()
+
+	s.log.Info("removed persistent WFP filters")
+
+	dns.FlushDNSCache()
+	s.log.Info("flushed DNS cache")
+}
+
 type svcHandler struct {
 	svc *Service
 }

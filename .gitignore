@@ -40,3 +40,7 @@ configs/config.local.yaml
 
 # Dependency cache
 vendor/
+
+# Debug output
+debug_*.txt
+*.log.txt
