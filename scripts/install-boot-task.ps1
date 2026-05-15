@@ -28,8 +28,8 @@ Register-ScheduledTask `
     -Trigger $trigger `
     -Principal $principal `
     -Settings $settings `
-    -Description "Restart Advanced Kill Switch service after boot (start -> stop -> sleep 2 -> start)" `
+    -Description "Restart Advanced Kill Switch service after boot (start -> stop -> sleep 2 minutes -> start)" `
     -Force | Out-Null
 
 Write-Host "Scheduled task '$taskName' installed." -ForegroundColor Green
-Write-Host "On next boot, the kill switch service will be: started, stopped, waited 2s, started again." -ForegroundColor Cyan
+Write-Host "On next boot: service starts, stops, waits 2 minutes, starts again." -ForegroundColor Cyan
